@@ -29,3 +29,12 @@ Quando modifichi `index.html`, cambia il numero di versione in `sw.js` (`menu-em
 - Scrivi i piatti di pranzo e cena (1-3 primi, 1-3 secondi, 0-2 dolci), usa **+** per aggiungerne.
 - La data in alto è automatica; il selettore data serve per stampare il menù di un altro giorno.
 - Scegli il template dall'anteprima e premi **Stampa**.
+
+### Libreria
+
+- **Salva in libreria** memorizza il menù del giorno sul dispositivo. Resta salvato anche chiudendo o reinstallando l'app (memoria del browser).
+- La tab **Libreria** mostra tutti i menù salvati con anteprima, data e template.
+- Seleziona uno o più menù e usa **Crea PDF**: ogni menù diventa una pagina (nella finestra di stampa scegli "Salva come PDF").
+- **Modifica** riapre il menù nell'Editor con tutti i dati; **Nuovo menù** parte da una scheda vuota.
+
+> Nota: i menù sono salvati nel browser del dispositivo. Pulire i dati del sito o usare un altro dispositivo/browser parte da una libreria vuota.
