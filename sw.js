@@ -1,10 +1,12 @@
-const CACHE = 'menu-embassy-v2';
+const CACHE = 'menu-embassy-v3';
 const CORE = [
   './',
   './index.html',
   './manifest.webmanifest',
   './logo.png',
   './favicon.ico',
+  './vendor/jspdf.umd.min.js',
+  './vendor/html2canvas.min.js',
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/icon-maskable-512.png',

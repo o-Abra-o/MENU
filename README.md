@@ -34,7 +34,7 @@ Quando modifichi `index.html`, cambia il numero di versione in `sw.js` (`menu-em
 
 - **Salva in libreria** memorizza il menù del giorno sul dispositivo. Resta salvato anche chiudendo o reinstallando l'app (memoria del browser).
 - La tab **Libreria** mostra tutti i menù salvati con anteprima, data e template.
-- Seleziona uno o più menù e usa **Crea PDF**: ogni menù diventa una pagina (nella finestra di stampa scegli "Salva come PDF").
+- Seleziona uno o più menù e usa **Crea PDF**: viene scaricato un file PDF con un menù per pagina.
 - **Modifica** riapre il menù nell'Editor con tutti i dati; **Nuovo menù** parte da una scheda vuota.
 
 > Nota: i menù sono salvati nel browser del dispositivo. Pulire i dati del sito o usare un altro dispositivo/browser parte da una libreria vuota.

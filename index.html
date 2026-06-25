@@ -177,7 +177,7 @@
   .tpl-marina .menu-date{
     font-family:'Cormorant Garamond',serif;font-size:30pt;font-weight:500;margin-top:3mm;
   }
-  .tpl-marina .head-wave{display:block;margin:4mm auto 0;width:42mm;color:var(--c-brass)}
+  .tpl-marina .head-wave{display:block;margin:4mm auto 0;width:42mm;height:4.2mm;color:var(--c-brass)}
   .tpl-marina .meal-title{
     font-family:'Cormorant Garamond',serif;font-weight:600;font-size:24pt;
     letter-spacing:.06em;
@@ -217,7 +217,7 @@
     font-family:'Playfair Display',serif;font-size:31pt;font-weight:700;margin-top:2mm;
     color:var(--c-ink);
   }
-  .tpl-tavola .head-flourish{display:block;margin:3.5mm auto 0;width:36mm;color:var(--c-gold)}
+  .tpl-tavola .head-flourish{display:block;margin:3.5mm auto 0;width:36mm;height:4.8mm;color:var(--c-gold)}
   .tpl-tavola .meal-title{
     font-family:'Playfair Display',serif;font-weight:700;font-size:23pt;color:var(--c-wine);
   }
@@ -245,7 +245,7 @@
   .tpl-orto .menu-date{
     font-family:'Fraunces',serif;font-size:32pt;font-weight:500;margin-top:3mm;font-style:italic;
   }
-  .tpl-orto .head-sprig{display:block;margin:4mm auto 0;width:24mm;color:var(--c-sage)}
+  .tpl-orto .head-sprig{display:block;margin:4mm auto 0;width:24mm;height:11.2mm;color:var(--c-sage)}
   .tpl-orto .meals{margin-top:11mm}
   .tpl-orto .meal-title{
     font-family:'Fraunces',serif;font-weight:500;font-size:23pt;letter-spacing:.01em;
@@ -282,7 +282,7 @@
   .tpl-carta .menu-date{
     font-family:'Playfair Display',serif;font-size:31pt;font-weight:700;margin-top:2mm;color:var(--c-ink);
   }
-  .tpl-carta .head-flourish{display:block;margin:3.5mm auto 0;width:36mm;color:var(--c-gold)}
+  .tpl-carta .head-flourish{display:block;margin:3.5mm auto 0;width:36mm;height:4.8mm;color:var(--c-gold)}
   .tpl-carta .meals{margin-top:5mm;justify-content:flex-start}
   /* override: stack courses, full-width dish lines */
   .tpl-carta .courses{display:block}
@@ -388,10 +388,12 @@
   @media print{
     @page{size:A4;margin:0}
     body{background:#fff}
-    .topbar,.app,.library,.toast{display:none !important}
-    #printArea{display:block !important}
-    #printArea .sheet{margin:0;min-height:296mm;page-break-after:always;break-after:page}
-    #printArea .sheet:last-child{page-break-after:auto;break-after:auto}
+    .topbar,.editor,.library,.toast,#printArea{display:none !important}
+    .app{display:block}
+    .stage{padding:0;height:auto;background:#fff;display:block;overflow:visible}
+    .stage-inner{transform:none !important}
+    .sheet-shadow{box-shadow:none;border-radius:0}
+    .sheet{margin:0;min-height:296mm}
   }
 </style>
 </head>
@@ -458,6 +460,8 @@
 <div id="printArea"></div>
 <div class="toast" id="toast"></div>
 
+<script src="vendor/jspdf.umd.min.js"></script>
+<script src="vendor/html2canvas.min.js"></script>
 <script>
 /* ---------------- config ---------------- */
 const LIMITS = { primi:[1,3], secondi:[1,3], dolci:[0,2] };
@@ -529,11 +533,14 @@ function buildEditor(){
 }
 
 /* ---------------- sheet markup ---------------- */
+function svgImg(cls,svg){
+  return '<img class="'+cls+'" alt="" src="data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg)+'">';
+}
 const MOTIFS = {
-  marina:'<svg class="head-wave" viewBox="0 0 120 12" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2 6c8-8 16 8 24 0s16-8 24 0 16 8 24 0 16-8 24 0 16 8 22 0"/></svg>',
-  tavola:'<svg class="head-flourish" viewBox="0 0 120 16" fill="currentColor"><path d="M60 2c-4 0-7 3-7 6 0 2 1 4 3 5-6-1-12-3-18-6 5 5 11 8 18 9-7 1-13 4-18 9 6-3 12-5 18-6-2 1-3 3-3 5 0 3 3 6 7 6s7-3 7-6c0-2-1-4-3-5 6 1 12 3 18 6-5-5-11-8-18-9 7-1 13-4 18-9-6 3-12 5-18 6 2-1 3-3 3-5 0-3-3-6-7-6z"/></svg>',
-  orto:'<svg class="head-sprig" viewBox="0 0 60 28" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"><path d="M30 26V8"/><path d="M30 12c-5 0-9-3-9-7 4 0 9 2 9 7zM30 12c5 0 9-3 9-7-4 0-9 2-9 7zM30 18c-4 0-7-2-7-5 3 0 7 2 7 5zM30 18c4 0 7-2 7-5-3 0-7 2-7 5z"/><circle cx="30" cy="5" r="2.4" fill="currentColor" stroke="none"/></svg>',
-  carta:'<svg class="head-flourish" viewBox="0 0 120 16" fill="currentColor"><path d="M60 2c-4 0-7 3-7 6 0 2 1 4 3 5-6-1-12-3-18-6 5 5 11 8 18 9-7 1-13 4-18 9 6-3 12-5 18-6-2 1-3 3-3 5 0 3 3 6 7 6s7-3 7-6c0-2-1-4-3-5 6 1 12 3 18 6-5-5-11-8-18-9 7-1 13-4 18-9-6 3-12 5-18 6 2-1 3-3 3-5 0-3-3-6-7-6z"/></svg>',
+  marina: svgImg('head-wave','<svg xmlns="http://www.w3.org/2000/svg" width="120" height="12" viewBox="0 0 120 12" fill="none" stroke="#a98549" stroke-width="1.4"><path d="M2 6c8-8 16 8 24 0s16-8 24 0 16 8 24 0 16-8 24 0 16 8 22 0"/></svg>'),
+  tavola: svgImg('head-flourish','<svg xmlns="http://www.w3.org/2000/svg" width="120" height="16" viewBox="0 0 120 16" fill="#b48a3c"><path d="M60 2c-4 0-7 3-7 6 0 2 1 4 3 5-6-1-12-3-18-6 5 5 11 8 18 9-7 1-13 4-18 9 6-3 12-5 18-6-2 1-3 3-3 5 0 3 3 6 7 6s7-3 7-6c0-2-1-4-3-5 6 1 12 3 18 6-5-5-11-8-18-9 7-1 13-4 18-9-6 3-12 5-18 6 2-1 3-3 3-5 0-3-3-6-7-6z"/></svg>'),
+  orto: svgImg('head-sprig','<svg xmlns="http://www.w3.org/2000/svg" width="60" height="28" viewBox="0 0 60 28" fill="none" stroke="#52613f" stroke-width="1.3" stroke-linecap="round"><path d="M30 26V8"/><path d="M30 12c-5 0-9-3-9-7 4 0 9 2 9 7zM30 12c5 0 9-3 9-7-4 0-9 2-9 7zM30 18c-4 0-7-2-7-5 3 0 7 2 7 5zM30 18c4 0 7-2 7-5-3 0-7 2-7 5z"/><circle cx="30" cy="5" r="2.4" fill="#52613f"/></svg>'),
+  carta: svgImg('head-flourish','<svg xmlns="http://www.w3.org/2000/svg" width="120" height="16" viewBox="0 0 120 16" fill="#b48a3c"><path d="M60 2c-4 0-7 3-7 6 0 2 1 4 3 5-6-1-12-3-18-6 5 5 11 8 18 9-7 1-13 4-18 9 6-3 12-5 18-6-2 1-3 3-3 5 0 3 3 6 7 6s7-3 7-6c0-2-1-4-3-5 6 1 12 3 18 6-5-5-11-8-18-9 7-1 13-4 18-9-6 3-12 5-18 6 2-1 3-3 3-5 0-3-3-6-7-6z"/></svg>'),
 };
 
 function courseHtml(data,meal,course){
@@ -749,20 +756,42 @@ function renderLibrary(){
   updateSelBar();
 }
 
-/* ---------------- print / pdf ---------------- */
-function printSheets(htmlArr){
-  if(!htmlArr.length) return;
-  const area=document.getElementById('printArea');
-  area.innerHTML=htmlArr.join('');
-  area.querySelectorAll('.sheet.tpl-carta').forEach(fitCartaEl);
-  window.print();
-}
-function createPdf(){
+/* ---------------- pdf download ---------------- */
+async function createPdf(){
   const ids=selectedIds();
   if(!ids.length) return;
   const lib=loadLib().sort((a,b)=>(b.date||'').localeCompare(a.date||'')||(b.savedAt-a.savedAt));
-  const sheets=lib.filter(m=>ids.includes(m.id)).map(m=>sheetHtml(m.template,m));
-  printSheets(sheets);
+  const menus=lib.filter(m=>ids.includes(m.id));
+  if(!menus.length) return;
+  if(!window.jspdf||!window.html2canvas){ toast('Librerie PDF non caricate'); return; }
+  const btn=document.getElementById('pdfBtn');
+  const old=btn.textContent; btn.disabled=true; btn.textContent='Creazione PDF\u2026';
+  try{
+    if(document.fonts&&document.fonts.ready) await document.fonts.ready;
+    const holder=document.createElement('div');
+    holder.style.cssText='position:fixed;left:-10000px;top:0;width:210mm;';
+    document.body.appendChild(holder);
+    const { jsPDF }=window.jspdf;
+    const pdf=new jsPDF({unit:'mm',format:'a4',orientation:'portrait'});
+    for(let i=0;i<menus.length;i++){
+      holder.innerHTML=sheetHtml(menus[i].template,menus[i]);
+      const sheet=holder.querySelector('.sheet');
+      if(menus[i].template==='carta') fitCartaEl(sheet);
+      await Promise.all([...holder.querySelectorAll('img')].map(im=>im.complete?Promise.resolve():new Promise(r=>{im.onload=im.onerror=r;})));
+      const canvas=await html2canvas(sheet,{scale:2,backgroundColor:null,useCORS:true,logging:false});
+      const img=canvas.toDataURL('image/png');
+      if(i>0) pdf.addPage();
+      pdf.addImage(img,'PNG',0,0,210,297,undefined,'FAST');
+    }
+    document.body.removeChild(holder);
+    const name = menus.length===1 ? ('menu-'+(menus[0].date||'menu')+'.pdf') : ('menu-embassy-'+menus.length+'-menu.pdf');
+    pdf.save(name);
+    toast('PDF scaricato');
+  }catch(e){
+    console.error(e); toast('Errore nella creazione del PDF');
+  }finally{
+    btn.disabled=false; btn.textContent=old; updateSelBar();
+  }
 }
 
 /* ---------------- tabs ---------------- */
@@ -779,7 +808,7 @@ function showView(name){
 document.getElementById('date').value=isoToday();
 document.getElementById('hotel').addEventListener('input',render);
 document.getElementById('date').addEventListener('input',render);
-document.getElementById('printBtn').addEventListener('click',()=>printSheets([sheetHtml(currentTpl,currentMenu())]));
+document.getElementById('printBtn').addEventListener('click',()=>window.print());
 document.getElementById('saveBtn').addEventListener('click',saveCurrent);
 document.getElementById('newBtn').addEventListener('click',newMenu);
 document.getElementById('tabEditor').addEventListener('click',()=>showView('editor'));
