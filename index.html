@@ -375,6 +375,42 @@
   }
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
+  /* ---------- summary controls ---------- */
+  .sum-bar{margin-top:-6px}
+  .sum-bar .sum-lab{color:var(--ui-text);font-size:13px;font-weight:600;margin-right:2px}
+  .sum-field{color:var(--ui-dim);font-size:12.5px;display:flex;align-items:center;gap:6px}
+  .sum-field input{
+    background:var(--ui-panel-2);border:1px solid var(--ui-line);color:var(--ui-text);
+    border-radius:7px;padding:7px 9px;font:inherit;font-size:12.5px;
+  }
+  .sum-field input:focus{outline:none;border-color:var(--ui-accent-2)}
+
+  /* ---------- summary sheet ---------- */
+  .sheet.summary{
+    font-family:'Inter',system-ui,sans-serif;color:#1d1f24;background:#fff;
+    padding:11mm 11mm 12mm;
+  }
+  .summary .sum-head{
+    display:flex;align-items:baseline;justify-content:space-between;
+    border-bottom:1.5px solid #222;padding-bottom:2.5mm;margin-bottom:5mm;
+  }
+  .summary .sum-head .t{font-size:13pt;font-weight:700;letter-spacing:.02em}
+  .summary .sum-head .r{font-size:10pt;color:#666}
+  .summary .sum-grid{
+    display:grid;grid-template-columns:1fr 1fr;grid-template-rows:repeat(4,1fr);
+    gap:5mm;flex:1;
+  }
+  .sum-box{
+    border:1px solid #c9c9c9;border-radius:4px;padding:3.5mm 4.5mm;overflow:hidden;
+    display:flex;flex-direction:column;font-size:9pt;
+  }
+  .sum-box.empty{border-style:dashed;border-color:#e4e4e4}
+  .sum-box .top{display:flex;align-items:baseline;gap:3.5mm;margin-bottom:1.6mm}
+  .sum-box .day{font-size:2.3em;font-weight:800;line-height:.85;color:#111}
+  .sum-box .lbl{font-size:1.12em;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:#7a1f2b}
+  .sum-box .lbl.cena{margin-top:1.8mm}
+  .sum-box .dishes{font-size:1em;line-height:1.32;color:#2a2c31}
+
   #printArea{display:none}
 
   /* ---------- responsive editor ---------- */
@@ -453,6 +489,12 @@
     <button id="editSelBtn" disabled>Apri in modifica</button>
     <button id="pdfBtn" class="primary" disabled>Crea PDF</button>
     <button id="delSelBtn" class="danger" disabled>Elimina</button>
+  </div>
+  <div class="lib-bar sum-bar">
+    <span class="sum-lab">Riepilogo</span>
+    <label class="sum-field">dal <input type="date" id="sumFrom"></label>
+    <label class="sum-field">al <input type="date" id="sumTo"></label>
+    <button id="summaryBtn" class="primary">Crea summary</button>
   </div>
   <div class="lib-grid" id="libGrid"></div>
 </section>
@@ -754,6 +796,7 @@ function renderLibrary(){
     });
   });
   updateSelBar();
+  setSumDefaults();
 }
 
 /* ---------------- pdf download ---------------- */
@@ -794,6 +837,73 @@ async function createPdf(){
   }
 }
 
+/* ---------------- summary ---------------- */
+function dishesFlat(data,meal){
+  return ['primi','secondi','dolci'].flatMap(c=>data[meal][c]).map(s=>s.trim()).filter(Boolean).join(' \u00b7 ');
+}
+function dayNum(iso){ const p=(iso||'').split('-'); return p[2]?String(Number(p[2])):'?'; }
+function fmtShort(iso){ const p=(iso||'').split('-'); return p.length===3?(p[2]+'/'+p[1]):iso; }
+function sumBoxHtml(m){
+  return '<div class="sum-box">'
+    +'<div class="top"><span class="day">'+dayNum(m.date)+'</span><span class="lbl">Pranzo</span></div>'
+    +'<div class="dishes">'+escapeHtml(dishesFlat(m.data,'pranzo'))+'</div>'
+    +'<div class="lbl cena">Cena</div>'
+    +'<div class="dishes">'+escapeHtml(dishesFlat(m.data,'cena'))+'</div>'
+  +'</div>';
+}
+function summaryPageHtml(chunk,rangeLabel){
+  let boxes='';
+  for(let i=0;i<8;i++) boxes += chunk[i]?sumBoxHtml(chunk[i]):'<div class="sum-box empty"></div>';
+  return '<div class="sheet summary">'
+    +'<div class="sum-head"><span class="t">Riepilogo menù</span><span class="r">'+rangeLabel+'</span></div>'
+    +'<div class="sum-grid">'+boxes+'</div>'
+  +'</div>';
+}
+function fitSumBox(box){
+  let fs=9, guard=0; box.style.fontSize=fs+'pt';
+  while(box.scrollHeight>box.clientHeight+1 && fs>6 && guard<20){ fs-=0.3; box.style.fontSize=fs.toFixed(1)+'pt'; guard++; }
+}
+function setSumDefaults(){
+  const dates=loadLib().map(m=>m.date).filter(Boolean).sort();
+  if(!dates.length) return;
+  const f=document.getElementById('sumFrom'), t=document.getElementById('sumTo');
+  if(!f.value) f.value=dates[0];
+  if(!t.value) t.value=dates[dates.length-1];
+}
+async function createSummary(){
+  let a=document.getElementById('sumFrom').value, b=document.getElementById('sumTo').value;
+  if(!a||!b){ toast('Scegli le date del periodo'); return; }
+  if(a>b){ const t=a;a=b;b=t; }
+  const menus=loadLib().filter(m=>m.date>=a&&m.date<=b).sort((x,y)=>(x.date||'').localeCompare(y.date||''));
+  if(!menus.length){ toast('Nessun menù nel periodo scelto'); return; }
+  if(!window.jspdf||!window.html2canvas){ toast('Librerie PDF non caricate'); return; }
+  const pages=[]; for(let i=0;i<menus.length;i+=8) pages.push(menus.slice(i,i+8));
+  const rangeLabel=fmtShort(a)+' \u2013 '+fmtShort(b);
+  const btn=document.getElementById('summaryBtn'); const old=btn.textContent; btn.disabled=true; btn.textContent='Creazione\u2026';
+  try{
+    if(document.fonts&&document.fonts.ready) await document.fonts.ready;
+    const holder=document.createElement('div');
+    holder.style.cssText='position:fixed;left:-10000px;top:0;width:210mm;';
+    document.body.appendChild(holder);
+    const { jsPDF }=window.jspdf;
+    const pdf=new jsPDF({unit:'mm',format:'a4',orientation:'portrait'});
+    for(let p=0;p<pages.length;p++){
+      holder.innerHTML=summaryPageHtml(pages[p],rangeLabel);
+      holder.querySelectorAll('.sum-box:not(.empty)').forEach(fitSumBox);
+      const canvas=await html2canvas(holder.querySelector('.sheet'),{scale:2,backgroundColor:'#ffffff',useCORS:true,logging:false});
+      if(p>0) pdf.addPage();
+      pdf.addImage(canvas.toDataURL('image/png'),'PNG',0,0,210,297,undefined,'FAST');
+    }
+    document.body.removeChild(holder);
+    pdf.save('riepilogo-'+a+'_'+b+'.pdf');
+    toast('Summary scaricato');
+  }catch(e){
+    console.error(e); toast('Errore nella creazione del summary');
+  }finally{
+    btn.disabled=false; btn.textContent=old;
+  }
+}
+
 /* ---------------- tabs ---------------- */
 function showView(name){
   const isEd=name==='editor';
@@ -826,6 +936,7 @@ document.getElementById('selAllBtn').addEventListener('click',()=>{
   const allOn=boxes.length && boxes.every(b=>b.checked);
   boxes.forEach(b=>{ b.checked=!allOn; b.dispatchEvent(new Event('change')); });
 });
+document.getElementById('summaryBtn').addEventListener('click',createSummary);
 window.addEventListener('resize',fitSheet);
 
 updateBadge();
