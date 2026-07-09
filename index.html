@@ -61,6 +61,8 @@
   .brand-logo{height:26px;width:auto;display:block}
   .brand-sub{color:var(--ui-dim);font-size:12.5px;margin:0 0 22px}
   .field{margin-bottom:14px}
+  .field-row{display:flex;gap:12px}
+  .field-row .field{flex:1;min-width:0}
   .field label{display:block;font-size:12px;color:var(--ui-dim);margin-bottom:6px;font-weight:500}
   .field input[type=text],.field input[type=date]{
     width:100%;padding:9px 11px;border-radius:8px;border:1px solid var(--ui-line);
@@ -456,6 +458,16 @@
       <label for="date">Data del menù</label>
       <input type="date" id="date">
     </div>
+    <div class="field-row">
+      <div class="field">
+        <label for="labelPranzo">Etichetta pranzo</label>
+        <input type="text" id="labelPranzo" value="Pranzo">
+      </div>
+      <div class="field">
+        <label for="labelCena">Etichetta cena</label>
+        <input type="text" id="labelCena" value="Cena">
+      </div>
+    </div>
 
     <div class="templates">
       <div class="lbl">Template</div>
@@ -605,9 +617,9 @@ function sheetHtml(tpl,menu){
       +MOTIFS[tpl]
     +'</header>'
     +'<div class="meals">'
-      +mealHtml(menu.data,'pranzo','Pranzo')
+      +mealHtml(menu.data,'pranzo',escapeHtml(mlabel(menu,'pranzo')))
       +'<div class="meal-divider"></div>'
-      +mealHtml(menu.data,'cena','Cena')
+      +mealHtml(menu.data,'cena',escapeHtml(mlabel(menu,'cena')))
     +'</div>'
     +'<footer class="sheet-foot">Buon appetito</footer>'
   +'</div>';
@@ -618,9 +630,16 @@ function currentMenu(){
   return {
     hotel:document.getElementById('hotel').value||'',
     date:document.getElementById('date').value||isoToday(),
+    labels:{
+      pranzo:document.getElementById('labelPranzo').value||'Pranzo',
+      cena:document.getElementById('labelCena').value||'Cena'
+    },
     template:currentTpl,
     data:state
   };
+}
+function mlabel(menu,meal){
+  return (menu.labels&&menu.labels[meal])||(meal==='pranzo'?'Pranzo':'Cena');
 }
 
 /* ---------------- render main sheet ---------------- */
@@ -715,7 +734,7 @@ function toast(msg){
 
 function saveCurrent(){
   const m=currentMenu();
-  const entry={ id:currentEditId||uid(), hotel:m.hotel, date:m.date, template:m.template, data:clone(m.data), savedAt:Date.now() };
+  const entry={ id:currentEditId||uid(), hotel:m.hotel, date:m.date, labels:m.labels, template:m.template, data:clone(m.data), savedAt:Date.now() };
   const lib=loadLib();
   const idx=lib.findIndex(x=>x.id===entry.id);
   if(idx>=0) lib[idx]=entry; else lib.push(entry);
@@ -730,6 +749,8 @@ function newMenu(){
   currentEditId=null;
   const e=emptyData(); state.pranzo=e.pranzo; state.cena=e.cena;
   document.getElementById('date').value=isoToday();
+  document.getElementById('labelPranzo').value='Pranzo';
+  document.getElementById('labelCena').value='Cena';
   buildEditor(); render(); showView('editor'); toast('Nuovo menù');
 }
 
@@ -738,6 +759,8 @@ function openInEditor(id){
   if(!m) return;
   document.getElementById('hotel').value=m.hotel||'';
   document.getElementById('date').value=m.date||isoToday();
+  document.getElementById('labelPranzo').value=(m.labels&&m.labels.pranzo)||'Pranzo';
+  document.getElementById('labelCena').value=(m.labels&&m.labels.cena)||'Cena';
   currentTpl=TEMPLATES.some(t=>t.id===m.template)?m.template:'marina';
   const d=clone(m.data); state.pranzo=d.pranzo; state.cena=d.cena;
   currentEditId=id;
@@ -845,9 +868,9 @@ function dayNum(iso){ const p=(iso||'').split('-'); return p[2]?String(Number(p[
 function fmtShort(iso){ const p=(iso||'').split('-'); return p.length===3?(p[2]+'/'+p[1]):iso; }
 function sumBoxHtml(m){
   return '<div class="sum-box">'
-    +'<div class="top"><span class="day">'+dayNum(m.date)+'</span><span class="lbl">Pranzo</span></div>'
+    +'<div class="top"><span class="day">'+dayNum(m.date)+'</span><span class="lbl">'+escapeHtml(mlabel(m,'pranzo'))+'</span></div>'
     +'<div class="dishes">'+escapeHtml(dishesFlat(m.data,'pranzo'))+'</div>'
-    +'<div class="lbl cena">Cena</div>'
+    +'<div class="lbl cena">'+escapeHtml(mlabel(m,'cena'))+'</div>'
     +'<div class="dishes">'+escapeHtml(dishesFlat(m.data,'cena'))+'</div>'
   +'</div>';
 }
@@ -918,6 +941,8 @@ function showView(name){
 document.getElementById('date').value=isoToday();
 document.getElementById('hotel').addEventListener('input',render);
 document.getElementById('date').addEventListener('input',render);
+document.getElementById('labelPranzo').addEventListener('input',render);
+document.getElementById('labelCena').addEventListener('input',render);
 document.getElementById('printBtn').addEventListener('click',()=>window.print());
 document.getElementById('saveBtn').addEventListener('click',saveCurrent);
 document.getElementById('newBtn').addEventListener('click',newMenu);
