@@ -138,7 +138,7 @@
 
   /* ============ MENU SHEET (shared) ============ */
   .sheet{
-    width:210mm;min-height:297mm;background:#fff;color:#1c1c1c;
+    width:210mm;min-height:297mm;background:#fff;color:#1c1c1c;--fit:1;
     padding:20mm 18mm;position:relative;display:flex;flex-direction:column;
   }
   .sheet-head{text-align:center;position:relative;z-index:2}
@@ -146,15 +146,15 @@
   .menu-date{margin:0}
   .meals{
     display:flex;flex-direction:column;flex:1;justify-content:center;
-    margin-top:9mm;position:relative;z-index:2;
+    margin-top:calc(9mm * var(--fit));position:relative;z-index:2;
   }
-  .meal-title{text-align:center;margin:0 0 6mm}
-  .courses{display:flex;justify-content:space-around;align-items:flex-start;gap:9mm}
+  .meal-title{text-align:center;margin:0 0 calc(6mm * var(--fit))}
+  .courses{display:flex;justify-content:space-around;align-items:flex-start;gap:calc(9mm * var(--fit))}
   .course{flex:1;max-width:62mm;text-align:center}
   .course h3{text-align:center;margin:0 0 3.5mm}
   .course ul{list-style:none;margin:0;padding:0;text-align:center}
-  .course li{margin:0 0 3.4mm;line-height:1.3}
-  .meal-divider{margin:10mm auto;width:55mm}
+  .course li{margin:0 0 calc(3.4mm * var(--fit));line-height:1.3}
+  .meal-divider{margin:calc(10mm * var(--fit)) auto;width:55mm}
   .sheet-foot{text-align:center;margin-top:9mm;position:relative;z-index:2}
 
   /* ---------- Template: Marina ---------- */
@@ -172,16 +172,16 @@
     opacity:.4;pointer-events:none;
   }
   .tpl-marina .hotel{
-    font-family:'Cormorant Garamond',serif;font-weight:600;font-size:13pt;
+    font-family:'Cormorant Garamond',serif;font-weight:600;font-size:calc(13pt * var(--fit));
     letter-spacing:.42em;text-transform:uppercase;color:var(--c-soft);
     padding-left:.42em;
   }
   .tpl-marina .menu-date{
-    font-family:'Cormorant Garamond',serif;font-size:30pt;font-weight:500;margin-top:3mm;
+    font-family:'Cormorant Garamond',serif;font-size:calc(30pt * var(--fit));font-weight:500;margin-top:3mm;
   }
   .tpl-marina .head-wave{display:block;margin:4mm auto 0;width:42mm;height:4.2mm;color:var(--c-brass)}
   .tpl-marina .meal-title{
-    font-family:'Cormorant Garamond',serif;font-weight:600;font-size:24pt;
+    font-family:'Cormorant Garamond',serif;font-weight:600;font-size:calc(24pt * var(--fit));
     letter-spacing:.06em;
   }
   .tpl-marina .meal-title::after{
@@ -189,13 +189,13 @@
     margin:2.6mm auto 0;opacity:.7;
   }
   .tpl-marina .course h3{
-    font-family:'Cormorant Garamond',serif;font-size:13pt;font-weight:600;
+    font-family:'Cormorant Garamond',serif;font-size:calc(13pt * var(--fit));font-weight:600;
     text-transform:uppercase;letter-spacing:.24em;color:var(--c-soft);padding-left:.24em;
   }
-  .tpl-marina .course li{font-size:16.5pt}
+  .tpl-marina .course li{font-size:calc(16.5pt * var(--fit))}
   .tpl-marina .meal-divider{height:1px;background:linear-gradient(to right,transparent,var(--c-brass),transparent);opacity:.55}
   .tpl-marina .sheet-foot{
-    font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15pt;color:var(--c-soft);
+    font-family:'Cormorant Garamond',serif;font-style:italic;font-size:calc(15pt * var(--fit));color:var(--c-soft);
   }
 
   /* ---------- Template: Tavola ---------- */
@@ -212,26 +212,26 @@
     pointer-events:none;opacity:.7;
   }
   .tpl-tavola .hotel{
-    font-family:'Playfair Display',serif;font-weight:700;font-size:12pt;
+    font-family:'Playfair Display',serif;font-weight:700;font-size:calc(12pt * var(--fit));
     letter-spacing:.3em;text-transform:uppercase;color:var(--c-wine);padding-left:.3em;
   }
   .tpl-tavola .menu-date{
-    font-family:'Playfair Display',serif;font-size:31pt;font-weight:700;margin-top:2mm;
+    font-family:'Playfair Display',serif;font-size:calc(31pt * var(--fit));font-weight:700;margin-top:2mm;
     color:var(--c-ink);
   }
   .tpl-tavola .head-flourish{display:block;margin:3.5mm auto 0;width:36mm;height:4.8mm;color:var(--c-gold)}
   .tpl-tavola .meal-title{
-    font-family:'Playfair Display',serif;font-weight:700;font-size:23pt;color:var(--c-wine);
+    font-family:'Playfair Display',serif;font-weight:700;font-size:calc(23pt * var(--fit));color:var(--c-wine);
   }
-  .tpl-tavola .meal-title::before,.tpl-tavola .meal-title::after{content:"\2766";color:var(--c-gold);font-size:14pt;margin:0 4mm;vertical-align:middle}
+  .tpl-tavola .meal-title::before,.tpl-tavola .meal-title::after{content:"\2766";color:var(--c-gold);font-size:calc(14pt * var(--fit));margin:0 4mm;vertical-align:middle}
   .tpl-tavola .course h3{
-    font-family:'Playfair Display',serif;font-size:13pt;font-weight:700;font-style:italic;
+    font-family:'Playfair Display',serif;font-size:calc(13pt * var(--fit));font-weight:700;font-style:italic;
     color:var(--c-gold);letter-spacing:.04em;
   }
-  .tpl-tavola .course li{font-size:15.5pt}
+  .tpl-tavola .course li{font-size:calc(15.5pt * var(--fit))}
   .tpl-tavola .meal-divider{height:1px;background:var(--c-gold);opacity:.5}
   .tpl-tavola .sheet-foot{
-    font-family:'Playfair Display',serif;font-style:italic;font-size:15pt;color:var(--c-wine);
+    font-family:'Playfair Display',serif;font-style:italic;font-size:calc(15pt * var(--fit));color:var(--c-wine);
   }
 
   /* ---------- Template: Orto ---------- */
@@ -241,26 +241,26 @@
     font-family:'Karla',sans-serif;color:var(--c-ink);
   }
   .tpl-orto .hotel{
-    font-family:'Karla',sans-serif;font-weight:600;font-size:10.5pt;
+    font-family:'Karla',sans-serif;font-weight:600;font-size:calc(10.5pt * var(--fit));
     letter-spacing:.34em;text-transform:uppercase;color:var(--c-sage);padding-left:.34em;
   }
   .tpl-orto .menu-date{
-    font-family:'Fraunces',serif;font-size:32pt;font-weight:500;margin-top:3mm;font-style:italic;
+    font-family:'Fraunces',serif;font-size:calc(32pt * var(--fit));font-weight:500;margin-top:3mm;font-style:italic;
   }
   .tpl-orto .head-sprig{display:block;margin:4mm auto 0;width:24mm;height:11.2mm;color:var(--c-sage)}
-  .tpl-orto .meals{margin-top:11mm}
+  .tpl-orto .meals{margin-top:calc(11mm * var(--fit))}
   .tpl-orto .meal-title{
-    font-family:'Fraunces',serif;font-weight:500;font-size:23pt;letter-spacing:.01em;
+    font-family:'Fraunces',serif;font-weight:500;font-size:calc(23pt * var(--fit));letter-spacing:.01em;
   }
   .tpl-orto .meal-title::after{
     content:"";display:block;width:8mm;height:2px;background:var(--c-ochre);
     margin:3.4mm auto 0;border-radius:2px;
   }
   .tpl-orto .course h3{
-    font-family:'Karla',sans-serif;font-size:11pt;font-weight:600;
+    font-family:'Karla',sans-serif;font-size:calc(11pt * var(--fit));font-weight:600;
     text-transform:uppercase;letter-spacing:.28em;color:var(--c-ochre);padding-left:.28em;
   }
-  .tpl-orto .course li{font-size:15pt;font-weight:400}
+  .tpl-orto .course li{font-size:calc(15pt * var(--fit));font-weight:400}
   .tpl-orto .meal-divider{height:2px;background:var(--c-sage);opacity:.2;border-radius:2px;width:42mm}
 
   /* ---------- Template: Carta (piatti a riga intera, stile Tavola) ---------- */
@@ -278,11 +278,11 @@
     pointer-events:none;opacity:.7;
   }
   .tpl-carta .hotel{
-    font-family:'Playfair Display',serif;font-weight:700;font-size:12pt;
+    font-family:'Playfair Display',serif;font-weight:700;font-size:calc(12pt * var(--fit));
     letter-spacing:.3em;text-transform:uppercase;color:var(--c-wine);padding-left:.3em;
   }
   .tpl-carta .menu-date{
-    font-family:'Playfair Display',serif;font-size:31pt;font-weight:700;margin-top:2mm;color:var(--c-ink);
+    font-family:'Playfair Display',serif;font-size:calc(31pt * var(--fit));font-weight:700;margin-top:2mm;color:var(--c-ink);
   }
   .tpl-carta .head-flourish{display:block;margin:3.5mm auto 0;width:36mm;height:4.8mm;color:var(--c-gold)}
   .tpl-carta .meals{margin-top:5mm;justify-content:flex-start}
@@ -294,18 +294,18 @@
     font-family:'Playfair Display',serif;font-weight:700;color:var(--c-wine);
     font-size:calc(23pt * var(--fit));margin:0 0 calc(5mm * var(--fit));
   }
-  .tpl-carta .meal-title::before,.tpl-carta .meal-title::after{content:"\2766";color:var(--c-gold);font-size:14pt;margin:0 4mm;vertical-align:middle}
+  .tpl-carta .meal-title::before,.tpl-carta .meal-title::after{content:"\2766";color:var(--c-gold);font-size:calc(14pt * var(--fit));margin:0 4mm;vertical-align:middle}
   .tpl-carta .course h3{
-    font-family:'Playfair Display',serif;font-size:13pt;font-weight:700;font-style:italic;
+    font-family:'Playfair Display',serif;font-size:calc(13pt * var(--fit));font-weight:700;font-style:italic;
     color:var(--c-gold);letter-spacing:.04em;margin:0 0 calc(2.6mm * var(--fit));
   }
   .tpl-carta .course li{font-size:calc(18pt * var(--fit));line-height:1.3;margin:0 0 calc(2.6mm * var(--fit))}
   .tpl-carta .meal-divider{height:1px;background:var(--c-gold);opacity:.5;width:40mm;margin:calc(7mm * var(--fit)) auto}
   .tpl-carta .sheet-foot{
-    font-family:'Playfair Display',serif;font-style:italic;font-size:15pt;color:var(--c-wine);
+    font-family:'Playfair Display',serif;font-style:italic;font-size:calc(15pt * var(--fit));color:var(--c-wine);
   }
   .tpl-orto .sheet-foot{
-    font-family:'Fraunces',serif;font-style:italic;font-size:15pt;color:var(--c-sage);
+    font-family:'Fraunces',serif;font-style:italic;font-size:calc(15pt * var(--fit));color:var(--c-sage);
   }
 
   /* ---------- topbar / tabs ---------- */
@@ -379,6 +379,7 @@
 
   /* ---------- summary controls ---------- */
   .sum-bar{margin-top:-6px}
+  .io-bar{margin-top:-10px}
   .sum-bar .sum-lab{color:var(--ui-text);font-size:13px;font-weight:600;margin-right:2px}
   .sum-field{color:var(--ui-dim);font-size:12.5px;display:flex;align-items:center;gap:6px}
   .sum-field input{
@@ -396,15 +397,15 @@
     display:flex;align-items:baseline;justify-content:space-between;
     border-bottom:1.5px solid #222;padding-bottom:2.5mm;margin-bottom:5mm;
   }
-  .summary .sum-head .t{font-size:13pt;font-weight:700;letter-spacing:.02em}
-  .summary .sum-head .r{font-size:10pt;color:#666}
+  .summary .sum-head .t{font-size:calc(13pt * var(--fit));font-weight:700;letter-spacing:.02em}
+  .summary .sum-head .r{font-size:calc(10pt * var(--fit));color:#666}
   .summary .sum-grid{
     display:grid;grid-template-columns:1fr 1fr;grid-template-rows:repeat(4,1fr);
     gap:5mm;flex:1;
   }
   .sum-box{
     border:1px solid #c9c9c9;border-radius:4px;padding:3.5mm 4.5mm;overflow:hidden;
-    display:flex;flex-direction:column;font-size:9pt;
+    display:flex;flex-direction:column;font-size:calc(9pt * var(--fit));
   }
   .sum-box.empty{border-style:dashed;border-color:#e4e4e4}
   .sum-box .top{display:flex;align-items:baseline;gap:3.5mm;margin-bottom:1.6mm}
@@ -507,6 +508,12 @@
     <label class="sum-field">dal <input type="date" id="sumFrom"></label>
     <label class="sum-field">al <input type="date" id="sumTo"></label>
     <button id="summaryBtn" class="primary">Crea summary</button>
+  </div>
+  <div class="lib-bar io-bar">
+    <span class="sum-lab">Backup</span>
+    <button id="exportBtn">Esporta libreria</button>
+    <button id="importBtn">Importa libreria</button>
+    <input type="file" id="importFile" accept="application/json,.json" hidden>
   </div>
   <div class="lib-grid" id="libGrid"></div>
 </section>
@@ -649,19 +656,19 @@ function render(){
   fitSheet();
   buildThumbs();
 }
-function fitCartaEl(sheet){
+function fitSheetEl(sheet){
   if(!sheet) return;
-  const mm=96/25.4, limit=295*mm;
+  const mm=96/25.4, limit=293*mm;
   let scale=1, guard=0;
   sheet.style.setProperty('--fit','1');
   const measure=()=>{const old=sheet.style.minHeight;sheet.style.minHeight='0';const h=sheet.offsetHeight;sheet.style.minHeight=old;return h;};
-  while(measure()>limit && scale>0.6 && guard<16){
-    scale-=0.03;guard++;
-    sheet.style.setProperty('--fit',scale.toFixed(2));
+  while(measure()>limit && scale>0.4 && guard<40){
+    scale-=0.025;guard++;
+    sheet.style.setProperty('--fit',scale.toFixed(3));
   }
 }
 function fitCarta(){
-  fitCartaEl(document.querySelector('#sheetMount .sheet.tpl-carta'));
+  fitSheetEl(document.querySelector('#sheetMount .sheet'));
 }
 function fitSheet(){
   const stage=document.getElementById('stage');
@@ -813,7 +820,7 @@ function renderLibrary(){
     grid.appendChild(card);
     requestAnimationFrame(()=>{
       const sh=scaler.querySelector('.sheet');
-      if(m.template==='carta') fitCartaEl(sh);
+      fitSheetEl(sh);
       const s=thumb.clientWidth/sh.offsetWidth;
       scaler.style.transform='scale('+s+')';
     });
@@ -842,7 +849,7 @@ async function createPdf(){
     for(let i=0;i<menus.length;i++){
       holder.innerHTML=sheetHtml(menus[i].template,menus[i]);
       const sheet=holder.querySelector('.sheet');
-      if(menus[i].template==='carta') fitCartaEl(sheet);
+      fitSheetEl(sheet);
       await Promise.all([...holder.querySelectorAll('img')].map(im=>im.complete?Promise.resolve():new Promise(r=>{im.onload=im.onerror=r;})));
       const canvas=await html2canvas(sheet,{scale:2,backgroundColor:null,useCORS:true,logging:false});
       const img=canvas.toDataURL('image/png');
@@ -927,6 +934,48 @@ async function createSummary(){
   }
 }
 
+/* ---------------- export / import ---------------- */
+function exportLibrary(){
+  const lib=loadLib();
+  if(!lib.length){ toast('Libreria vuota'); return; }
+  const blob=new Blob([JSON.stringify(lib,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url; a.download='libreria-menu-embassy-'+isoToday()+'.json';
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+  toast('Libreria esportata ('+lib.length+')');
+}
+function importLibrary(file){
+  const reader=new FileReader();
+  reader.onload=()=>{
+    let arr;
+    try{ arr=JSON.parse(reader.result); }catch(e){ toast('File non valido'); return; }
+    if(!Array.isArray(arr)){ toast('File non valido'); return; }
+    const valid=arr.filter(m=>m&&m.data&&m.data.pranzo&&m.data.cena);
+    if(!valid.length){ toast('Nessun menù valido nel file'); return; }
+    const lib=loadLib();
+    const byId={}; lib.forEach(m=>{byId[m.id]=m;});
+    let added=0, updated=0;
+    valid.forEach(m=>{
+      const id=m.id||uid();
+      const entry={
+        id, hotel:m.hotel||'', date:m.date||isoToday(),
+        labels:(m.labels&&m.labels.pranzo)?m.labels:{pranzo:'Pranzo',cena:'Cena'},
+        template:m.template||'marina',
+        data:{pranzo:m.data.pranzo,cena:m.data.cena},
+        savedAt:m.savedAt||Date.now()
+      };
+      if(byId[id]) updated++; else added++;
+      byId[id]=entry;
+    });
+    saveLib(Object.values(byId));
+    updateBadge(); renderLibrary();
+    toast('Importati: '+added+' nuovi, '+updated+' aggiornati');
+  };
+  reader.readAsText(file);
+}
+
 /* ---------------- tabs ---------------- */
 function showView(name){
   const isEd=name==='editor';
@@ -962,6 +1011,13 @@ document.getElementById('selAllBtn').addEventListener('click',()=>{
   boxes.forEach(b=>{ b.checked=!allOn; b.dispatchEvent(new Event('change')); });
 });
 document.getElementById('summaryBtn').addEventListener('click',createSummary);
+document.getElementById('exportBtn').addEventListener('click',exportLibrary);
+document.getElementById('importBtn').addEventListener('click',()=>document.getElementById('importFile').click());
+document.getElementById('importFile').addEventListener('change',e=>{
+  const f=e.target.files&&e.target.files[0];
+  if(f) importLibrary(f);
+  e.target.value='';
+});
 window.addEventListener('beforeprint',()=>{
   const inner=document.getElementById('stageInner');
   inner.style.transform='none'; inner.style.height='auto'; inner.style.width='auto';

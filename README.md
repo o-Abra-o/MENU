@@ -37,4 +37,6 @@ Quando modifichi `index.html`, cambia il numero di versione in `sw.js` (`menu-em
 - Seleziona uno o più menù e usa **Crea PDF**: viene scaricato un file PDF con un menù per pagina.
 - **Modifica** riapre il menù nell'Editor con tutti i dati; **Nuovo menù** parte da una scheda vuota.
 
+- **Esporta libreria** scarica tutti i menù in un file JSON (backup). **Importa libreria** ricarica quel file su un altro dispositivo o browser: i menù vengono uniti a quelli presenti (stesso menù aggiornato, non duplicato).
+
 > Nota: i menù sono salvati nel browser del dispositivo. Pulire i dati del sito o usare un altro dispositivo/browser parte da una libreria vuota.
