@@ -1,4 +1,4 @@
-const CACHE = 'menu-embassy-v5';
+const CACHE = 'menu-embassy-v6';
 const CORE = [
   './',
   './index.html',

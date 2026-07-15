@@ -429,7 +429,7 @@
     .topbar,.editor,.library,.toast,#printArea{display:none !important}
     .app{display:block}
     .stage{padding:0;height:auto;background:#fff;display:block;overflow:visible}
-    .stage-inner{transform:none !important}
+    .stage-inner{transform:none !important;height:auto !important;width:auto !important}
     .sheet-shadow{box-shadow:none;border-radius:0}
     .sheet{margin:0;min-height:296mm}
   }
@@ -962,6 +962,11 @@ document.getElementById('selAllBtn').addEventListener('click',()=>{
   boxes.forEach(b=>{ b.checked=!allOn; b.dispatchEvent(new Event('change')); });
 });
 document.getElementById('summaryBtn').addEventListener('click',createSummary);
+window.addEventListener('beforeprint',()=>{
+  const inner=document.getElementById('stageInner');
+  inner.style.transform='none'; inner.style.height='auto'; inner.style.width='auto';
+});
+window.addEventListener('afterprint',fitSheet);
 window.addEventListener('resize',fitSheet);
 
 updateBadge();
