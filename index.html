@@ -751,7 +751,7 @@ function newMenu(){
   document.getElementById('date').value=isoToday();
   document.getElementById('labelPranzo').value='Pranzo';
   document.getElementById('labelCena').value='Cena';
-  buildEditor(); render(); showView('editor'); toast('Nuovo menù');
+  buildEditor(); showView('editor'); toast('Nuovo menù');
 }
 
 function openInEditor(id){
@@ -764,7 +764,7 @@ function openInEditor(id){
   currentTpl=TEMPLATES.some(t=>t.id===m.template)?m.template:'marina';
   const d=clone(m.data); state.pranzo=d.pranzo; state.cena=d.cena;
   currentEditId=id;
-  buildEditor(); render(); showView('editor');
+  buildEditor(); showView('editor');
 }
 
 function deleteMenu(id){
@@ -934,7 +934,7 @@ function showView(name){
   document.getElementById('view-library').classList.toggle('active',!isEd);
   document.getElementById('tabEditor').classList.toggle('active',isEd);
   document.getElementById('tabLibrary').classList.toggle('active',!isEd);
-  if(isEd) requestAnimationFrame(fitSheet); else renderLibrary();
+  if(isEd) render(); else renderLibrary();
 }
 
 /* ---------------- wire up ---------------- */
